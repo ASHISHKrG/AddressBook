@@ -35,8 +35,7 @@ public class AddressBook {
 	public static void main(String[] args) {
 		System.out.println("Welcome to Address Book");
 
-		// Contact contact= new
-		// Contact("Ashish","Burlington","Lucknow","UP","9044855917",226001,"aashish7322@gmail.com");
+		// Contact contact= new Contact("Ashish","Burlington","Lucknow","UP","9044855917",226001,"aashish7322@gmail.com");
 		Contact contact = new Contact();
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter the FirstName");
