@@ -83,7 +83,7 @@ public class AddressBook {
 
 		String deleteContact = contact.deleteContact();
 		allContacts.remove(deleteContact);
-		 System.out.println(allContacts);
+		System.out.println(allContacts);
 	}
 
 }
