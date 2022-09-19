@@ -55,6 +55,13 @@ class Contact {
 		String removeContact = sc.nextLine();
 		return removeContact;
 	}
+	
+	String updateContact() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the First Name of the Contact you want to update");
+		String updateContact = sc.nextLine();
+		return updateContact;
+	}
 }
 
 public class AddressBook {
@@ -83,6 +90,11 @@ public class AddressBook {
 
 		String deleteContact = contact.deleteContact();
 		allContacts.remove(deleteContact);
+		System.out.println(allContacts);
+		
+		String updateContact = contact.updateContact();
+		contact.contactDetails();
+		allContacts.put(updateContact,contact);
 		System.out.println(allContacts);
 	}
 
