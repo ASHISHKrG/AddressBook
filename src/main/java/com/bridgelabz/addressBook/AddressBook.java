@@ -48,13 +48,20 @@ class Contact {
 		ZipCode = sc.nextInt();
 
 	}
+
+	String deleteContact() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the First Name of the Contact you want to Delete");
+		String removeContact = sc.nextLine();
+		return removeContact;
+	}
 }
 
 public class AddressBook {
 
 	public static void main(String[] args) {
 		System.out.println("Welcome to Address Book");
-
+		Contact contact = new Contact();
 		Map<String, Contact> allContacts = new HashMap<String, Contact>();
 
 		/* Add Contact using Constructor */
@@ -66,7 +73,7 @@ public class AddressBook {
 		int noOfContact = sc.nextInt();
 
 		for (int i = 1; i <= noOfContact; i++) {
-			Contact contact = new Contact();
+
 			contact.contactDetails();
 			allContacts.put(contact.getFirstName(), contact);
 		}
@@ -74,6 +81,9 @@ public class AddressBook {
 		allContacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
 		System.out.println(allContacts);
 
+		String deleteContact = contact.deleteContact();
+		allContacts.remove(deleteContact);
+		 System.out.println(allContacts);
 	}
 
 }
