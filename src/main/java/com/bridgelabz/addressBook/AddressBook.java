@@ -1,5 +1,6 @@
 package com.bridgelabz.addressBook;
 
+import java.util.ArrayList;
 //import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,7 +56,7 @@ class Contact {
 		String removeContact = sc.nextLine();
 		return removeContact;
 	}
-	
+
 	String updateContact() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter the First Name of the Contact you want to update");
@@ -80,7 +81,7 @@ public class AddressBook {
 		int noOfContact = sc.nextInt();
 
 		for (int i = 1; i <= noOfContact; i++) {
-
+			contact = new Contact();
 			contact.contactDetails();
 			allContacts.put(contact.getFirstName(), contact);
 		}
@@ -91,11 +92,35 @@ public class AddressBook {
 		String deleteContact = contact.deleteContact();
 		allContacts.remove(deleteContact);
 		System.out.println(allContacts);
-		
+
 		String updateContact = contact.updateContact();
 		contact.contactDetails();
-		allContacts.put(updateContact,contact);
+		allContacts.put(updateContact.toString(), contact);
+		allContacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
 		System.out.println(allContacts);
-	}
 
+		/*
+		 * for (int i = 0; i < allContacts.size(); i++) { ArrayList<Object> data = new
+		 * ArrayList<Object>(allContacts.keySet()); Object obj = data.get(i);
+		 * System.out.println("AddressBook" + i + " :" + obj + " Contact : " +
+		 * allContacts.get(obj)); }
+		 */
+		/*
+		 * System.out.println("Enter the First Name of the Contact you want to update");
+		 * String updateContact = sc.nextLine(); contact.contactDetails();
+		 * allContacts.put(updateContact.toString(), contact); allContacts.forEach((k,
+		 * v) -> System.out.println("Key = " + k + ", Value = " + v));
+		 * //System.out.println(allContacts);
+		 * 
+		 * addressBook.put(contact.getFirstName(), allContacts); addressBook.forEach((k,
+		 * v) -> System.out.println("Key = " + k + ", Value = " + v)); //
+		 * System.out.println(allContacts); System.out.println(addressBook);
+		 * 
+		 * for (int i = 1; i <= allContacts.size(); i++) { ArrayList<Object> data = new
+		 * ArrayList<Object>(allContacts.keySet()); Object obj = data.get(i);
+		 * System.out.println("AddressBook" + i + " :" + obj + " Contact : " +
+		 * allContacts.get(obj)); }
+		 */
+
+	}
 }
