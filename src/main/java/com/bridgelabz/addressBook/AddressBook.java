@@ -12,6 +12,7 @@ public class AddressBook {
 
 	Map<String, Map<String, Contact>> multipleAddBook;
 
+	// creating contact for addressBook
 	public Contact contactDetails() {
 		Contact contact = new Contact();
 		Scanner sc = new Scanner(System.in);
@@ -47,7 +48,7 @@ public class AddressBook {
 		for (int i = 1; i <= noOfContact; i++) {
 			AddressBook AddContact = new AddressBook();
 			Contact contact = AddContact.contactDetails();
-			allContacts.put(contact.getFirstName(), contact);
+			allContacts.put(contact.getFirstName().toLowerCase(), contact);
 		}
 
 		allContacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
@@ -65,10 +66,11 @@ public class AddressBook {
 		if (updatechoice == 'Y') {
 			// remove old contact and updating new key as first name
 			String updateContact = addBookobj.updateContact();
-			allContacts.remove(updateContact);
+			if (allContacts.containsKey(updateContact.toLowerCase()))
+				allContacts.remove(updateContact);
 
 			Contact updatecontact = contactDetails();
-			allContacts.put(updatecontact.getFirstName(), updatecontact);
+			allContacts.put(updatecontact.getFirstName().toLowerCase(), updatecontact);
 
 		}
 		allContacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
@@ -78,7 +80,7 @@ public class AddressBook {
 
 	}
 
-//for creating multiple addressbook and adding contact
+	// for creating multiple addressbook and adding contact
 	void addMultipleAddressBook() {
 		multipleAddBook = new HashMap<String, Map<String, Contact>>();
 		for (int i = 1; i < 2; i++) {
