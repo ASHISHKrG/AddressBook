@@ -8,53 +8,16 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
-class Contact {
+public class AddressBook {
 
-	String FirstName;
-	String LastName;
-	String Address;
-	String City;
-	String State;
-	String PhoneNO;
-	String Email;
-	int ZipCode;
-
-	public String toString() {
-		return "First Name: " + FirstName + " LastName " + LastName + " Address." + Address;
-	}
-
-	public String getFirstName() {
-		return FirstName;
-	}
-
-	void contactDetails() {
-
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter the FirstName");
-		FirstName = sc.nextLine();
-
-		System.out.println("Enter the LastName");
-		LastName = sc.nextLine();
-		System.out.println("Enter the Address");
-		Address = sc.nextLine();
-		System.out.println("Enter the City");
-		City = sc.nextLine();
-		System.out.println("Enter the State");
-		State = sc.nextLine();
-		System.out.println("Enter the Phone NO");
-		PhoneNO = sc.nextLine();
-		System.out.println("Enter the Email");
-		Email = sc.nextLine();
-		System.out.println("Enter the ZipCode");
-		ZipCode = sc.nextInt();
-
-	}
+	Map<String, Map<String, Contact>> multipleAddBook;
 
 	String deleteContact() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter the First Name of the Contact you want to Delete");
 		String removeContact = sc.nextLine();
 		return removeContact;
+
 	}
 
 	String updateContact() {
@@ -63,49 +26,108 @@ class Contact {
 		String updateContact = sc.nextLine();
 		return updateContact;
 	}
-}
 
-public class AddressBook {
-
-	public static void main(String[] args) {
-		System.out.println("Welcome to Address Book");
+	public Contact contactDetails() {
 		Contact contact = new Contact();
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the FirstName");
+		contact.setFirstName(sc.nextLine());
+
+		System.out.println("Enter the LastName");
+		contact.setLastName(sc.nextLine());
+		System.out.println("Enter the Address");
+		contact.setAddress(sc.nextLine());
+		System.out.println("Enter the City");
+		contact.setCity(sc.nextLine());
+		System.out.println("Enter the State");
+		contact.setState(sc.nextLine());
+		System.out.println("Enter the Phone NO");
+		contact.setPhoneNO(sc.nextLine());
+		System.out.println("Enter the Email");
+		contact.setEmail(sc.nextLine());
+		System.out.println("Enter the ZipCode");
+		contact.setZipCode(sc.nextInt());
+
+		return contact;
+	}
+
+	public Map<String, Contact> createAddressBook() {
 		Map<String, Contact> allContacts = new HashMap<String, Contact>();
 
-		/* Add Contact using Constructor */
-		// Contact contact= new
-		// Contact("Ashish","Burlington","Lucknow","UP","9044855917",226001,"aashish7322@gmail.com");
-
 		Scanner sc = new Scanner(System.in);
+
 		System.out.println("Enter the No of contacts you want to create");
 		int noOfContact = sc.nextInt();
 
 		for (int i = 1; i <= noOfContact; i++) {
-			contact = new Contact();
-			contact.contactDetails();
+			AddressBook AddContact = new AddressBook();
+			Contact contact = AddContact.contactDetails();
 			allContacts.put(contact.getFirstName(), contact);
 		}
 
 		allContacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
+
+		System.out.println("Please confirm if you want to delete Contact \n Enter Y/N");
+		char delchoice = sc.next().charAt(0);
+		AddressBook addBookobj = new AddressBook();
+		if (delchoice == 'Y')
+			allContacts.remove(addBookobj.deleteContact());
 		System.out.println(allContacts);
 
-		String deleteContact = contact.deleteContact();
-		allContacts.remove(deleteContact);
-		System.out.println(allContacts);
+		System.out.println("Please confirm if you want to Update Contact Enter Y/N");
+		char updatechoice = sc.next().charAt(0);
 
-		String updateContact = contact.updateContact();
-		contact.contactDetails();
-		allContacts.put(updateContact.toString(), contact);
+		if (updatechoice == 'Y') {
+			// remove old contact and updating new key as first name
+			String updateContact = addBookobj.updateContact();
+			allContacts.remove(updateContact);
+
+			// AddressBook updatedContact = new AddressBook();
+			Contact updatecontact = contactDetails();
+			allContacts.put(updatecontact.getFirstName(), updatecontact);
+
+		}
 		allContacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
 		System.out.println(allContacts);
 
-		/*
-		 
-		 * for (int i = 1; i <= allContacts.size(); i++) { ArrayList<Object> data = new
-		 * ArrayList<Object>(allContacts.keySet()); Object obj = data.get(i);
-		 * System.out.println("AddressBook" + i + " :" + obj + " Contact : " +
-		 * allContacts.get(obj)); }
-		 */
+		return allContacts;
 
 	}
+
+	void addMultipleAddressBook() {
+		multipleAddBook = new HashMap<String, Map<String, Contact>>();
+		for (int i = 1; i <= 2; i++) {
+			System.out.println("Please Confirm if you want to add multiple Address Book ,Enter Y/N ");
+			Scanner sc = new Scanner(System.in);
+
+			char choice = sc.next().charAt(0);
+			if (choice == 'Y') {
+
+				System.out.println("Enter the name of AddressBook");
+
+				String addBookName = sc.next().toLowerCase();
+
+				AddressBook addAddBook = new AddressBook();
+				System.out.println(addBookName);
+				Map<String, Contact> newcontacts = addAddBook.createAddressBook();
+
+				multipleAddBook.put(addBookName, newcontacts);
+				System.out.println(multipleAddBook);
+			}
+			// multipleAddBook.put("ADB2", newcontacts);
+
+			i = 0;
+			// return multipleAddBook;
+		}
+
+	}
+
+	public static void main(String[] args) {
+		System.out.println("Welcome to Address Book");
+
+		AddressBook adBook = new AddressBook();
+		adBook.addMultipleAddressBook();
+
+	}
+
 }
