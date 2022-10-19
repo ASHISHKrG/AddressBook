@@ -12,21 +12,6 @@ public class AddressBook {
 
 	Map<String, Map<String, Contact>> multipleAddBook;
 
-	String deleteContact() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter the First Name of the Contact you want to Delete");
-		String removeContact = sc.nextLine();
-		return removeContact;
-
-	}
-
-	String updateContact() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter the First Name of the Contact you want to update");
-		String updateContact = sc.nextLine();
-		return updateContact;
-	}
-
 	public Contact contactDetails() {
 		Contact contact = new Contact();
 		Scanner sc = new Scanner(System.in);
@@ -82,7 +67,6 @@ public class AddressBook {
 			String updateContact = addBookobj.updateContact();
 			allContacts.remove(updateContact);
 
-			// AddressBook updatedContact = new AddressBook();
 			Contact updatecontact = contactDetails();
 			allContacts.put(updatecontact.getFirstName(), updatecontact);
 
@@ -94,9 +78,10 @@ public class AddressBook {
 
 	}
 
+//for creating multiple addressbook and adding contact
 	void addMultipleAddressBook() {
 		multipleAddBook = new HashMap<String, Map<String, Contact>>();
-		for (int i = 1; i <= 2; i++) {
+		for (int i = 1; i < 2; i++) {
 			System.out.println("Please Confirm if you want to add multiple Address Book ,Enter Y/N ");
 			Scanner sc = new Scanner(System.in);
 
@@ -113,13 +98,27 @@ public class AddressBook {
 
 				multipleAddBook.put(addBookName, newcontacts);
 				System.out.println(multipleAddBook);
-			}
-			// multipleAddBook.put("ADB2", newcontacts);
+				i = 0;
+			} else
+				System.out.println("Created AddressBook" + multipleAddBook);
 
-			i = 0;
-			// return multipleAddBook;
 		}
 
+	}
+
+	String deleteContact() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the First Name of the Contact you want to Delete");
+		String removeContact = sc.nextLine();
+		return removeContact;
+
+	}
+
+	String updateContact() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the First Name of the Contact you want to update");
+		String updateContact = sc.nextLine();
+		return updateContact;
 	}
 
 	public static void main(String[] args) {
