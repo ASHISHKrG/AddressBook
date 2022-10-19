@@ -48,7 +48,12 @@ public class AddressBook {
 		for (int i = 1; i <= noOfContact; i++) {
 			AddressBook AddContact = new AddressBook();
 			Contact contact = AddContact.contactDetails();
-			allContacts.put(contact.getFirstName().toLowerCase(), contact);
+			// Check for duplicate contact as key
+			if (allContacts.containsKey(contact.getFirstName().toLowerCase())) {
+				System.out.println("Contact already exists");
+
+			} else
+				allContacts.put(contact.getFirstName().toLowerCase(), contact);
 		}
 
 		allContacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
