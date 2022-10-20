@@ -6,7 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
 import org.json.simple.parser.ParseException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AddressBook {
@@ -141,37 +143,13 @@ public class AddressBook {
 		AddressBook adBook = new AddressBook();
 		Map<String, Contact> addressBookSystem = adBook.addMultipleAddressBook();
 
-		FileIOAddBook fileWriterObj = new FileIOAddBook();
-
-		String fileURL = "C:\\Users\\aashi\\eclipse-workspace\\addressBook\\src\\main\\resources\\AddressBook.txt";
-		// Converts Hashmap to JSON As ObjectMapper is used, it writes JSON // string
-		ObjectMapper mapper = new ObjectMapper();
-
-		try {
-
-			String AddressBookJson = mapper.writeValueAsString(addressBookSystem);
-
-			// Print JSON output
-			System.out.println("JSON" + AddressBookJson);
-			// fileWriterObj.fileWriterWithFileWriter(fileURL, AddressBookJson);
-		}
-
-		// Catching generic input output exceptions
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// FileIOAddBook.readJSONdata(fileURL);
-
-		System.out.println("--------------------");
-
-		System.out.println("Enter city name for searching contact by City");
+		System.out.println("Enter city name for searching contacts by City");
 		Scanner sc = new Scanner(System.in);
 		city = sc.nextLine().toLowerCase();
 		SearchPerson Searchedersons = new SearchPerson();
 		Searchedersons.getPersonByCity(addressBookSystem, city);
 
-		System.out.println("Enter Sate name for searching contact by State");
+		System.out.println("Enter State name for searching contacts by State");
 		state = sc.nextLine().toLowerCase();
 		Map<String, Contact> personsWithState = Searchedersons.getPersonByState(addressBookSystem, city, state);
 		System.out.println(personsWithState);
@@ -181,6 +159,9 @@ public class AddressBook {
 				.sorted((i1, i2) -> i1.getKey().compareTo(i2.getKey()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-		System.out.println(temp);
+		System.out.println("Sorted addesbook by person name" + temp);
+
+		// calling file Writer method
+		FileIOAddBook.readWriteOperation(addressBookSystem);
 	}
 }
