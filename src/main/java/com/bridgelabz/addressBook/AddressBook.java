@@ -1,25 +1,12 @@
 package com.bridgelabz.addressBook;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-//import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.json.simple.parser.ParseException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AddressBook {
@@ -189,7 +176,7 @@ public class AddressBook {
 		Map<String, Contact> personsWithState = Searchedersons.getPersonByState(addressBookSystem, city, state);
 		System.out.println(personsWithState);
 
-		//UC11 SORTING MAP using person name alphabetically
+		// UC11 SORTING MAP using person name alphabetically
 		HashMap<String, Contact> temp = addressBookSystem.entrySet().stream()
 				.sorted((i1, i2) -> i1.getKey().compareTo(i2.getKey()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));

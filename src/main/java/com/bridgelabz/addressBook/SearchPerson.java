@@ -16,6 +16,14 @@ public class SearchPerson {
 			city_Map.put(entry.getValue().getCity().toLowerCase() + entry.getValue().getFirstName(), entry.getValue());
 
 		}
+		// uc12 sorting BY city name
+
+		HashMap<String, Contact> sortedByCity = city_Map.entrySet().stream()
+				.sorted((i1, i2) -> i1.getKey().compareTo(i2.getKey()))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+		System.out.println("Sorted by city name" + sortedByCity);
+		
 		// UC-9 Removing contacts with different city
 		city_Map.keySet().removeIf(key -> !key.startsWith(city));
 		System.out.println(city_Map);
@@ -26,13 +34,7 @@ public class SearchPerson {
 
 		System.out.println("No of Contacts with city " + city + " : " + noOfContactsWithCity);
 
-		// uc12 sorting
-
-		HashMap<String, Contact> sortedByCity = city_Map.entrySet().stream()
-				.sorted((i1, i2) -> i1.getKey().compareTo(i2.getKey()))
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-		System.out.println("Sorted by city name" + sortedByCity);
+	
 
 		return city_Map;
 	}
