@@ -1,16 +1,28 @@
 package com.bridgelabz.addressBook;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 //import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.json.simple.parser.ParseException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AddressBook {
 
-	Map<String, Map<String, Contact>> multipleAddBook;
+	static Map<String, Map<String, Contact>> multipleAddBook;
+	private static String city;
 
 	// creating contact for addressBook
 	public Contact contactDetails() {
@@ -49,7 +61,9 @@ public class AddressBook {
 			AddressBook AddContact = new AddressBook();
 			Contact contact = AddContact.contactDetails();
 			// Check for duplicate contact as key
-			if (allContacts.containsKey(contact.getFirstName().toLowerCase())) {
+			boolean result = allContacts.entrySet().stream().anyMatch(
+					contactMap -> contactMap.getValue().getFirstName().contains(contact.getFirstName().toLowerCase()));
+			if (result == true) {
 				System.out.println("Contact already exists");
 
 			} else
@@ -86,7 +100,7 @@ public class AddressBook {
 	}
 
 	// for creating multiple addressbook and adding contact
-	void addMultipleAddressBook() {
+	Map<String, Map<String, Contact>> addMultipleAddressBook() {
 		multipleAddBook = new HashMap<String, Map<String, Contact>>();
 		for (int i = 1; i < 2; i++) {
 			System.out.println("Please Confirm if you want to add multiple Address Book ,Enter Y/N ");
@@ -110,7 +124,7 @@ public class AddressBook {
 				System.out.println("Created AddressBook" + multipleAddBook);
 
 		}
-
+		return multipleAddBook;
 	}
 
 	String deleteContact() {
@@ -128,12 +142,46 @@ public class AddressBook {
 		return updateContact;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, ParseException {
 		System.out.println("Welcome to Address Book");
 
 		AddressBook adBook = new AddressBook();
-		adBook.addMultipleAddressBook();
+		Map<String, Map<String, Contact>> addressBookSystem = adBook.addMultipleAddressBook();
+
+		FileIOAddBook fileWriterObj = new FileIOAddBook();
+
+		String fileURL = "C:\\Users\\aashi\\eclipse-workspace\\addressBook\\src\\main\\resources\\AddressBook.txt";
+		// Converts Hashmap to JSON As ObjectMapper is used, it writes JSON // string
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+
+			String AddressBookJson = mapper.writeValueAsString(addressBookSystem);
+
+			// Print JSON output
+			System.out.println("JSON" + AddressBookJson);
+			fileWriterObj.fileWriterWithFileWriter(fileURL, AddressBookJson);
+		}
+
+		// Catching generic input output exceptions
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		FileIOAddBook.readJSONdata(fileURL);
+
+		city = "LKO";
+		String state = "MP";
+		System.out.println("-----------");
+
+		addressBookSystem
+				.entrySet().stream().filter(
+						contactMap -> contactMap.getValue().entrySet().stream()
+								.anyMatch(conMap -> conMap.getValue().getCity().equals(city)
+										&& conMap.getValue().getState().equalsIgnoreCase(state)))
+				.forEach(System.out::println);
+
+		// filter(conMap-> conMap.getValue().containsValue("LKO"))
 
 	}
-
 }

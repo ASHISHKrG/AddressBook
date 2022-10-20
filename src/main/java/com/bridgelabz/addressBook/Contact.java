@@ -14,7 +14,8 @@ class Contact {
 	private int ZipCode;
 
 	public String toString() {
-		return "First Name: " + FirstName + " LastName " + LastName + " Address:" + Address;
+		return "First Name: " + FirstName + " LastName " + LastName + " Address:" + Address + " City:" + City
+				+ " State:" + State;
 	}
 
 	public String getFirstName() {
@@ -81,5 +82,4 @@ class Contact {
 		FirstName = firstName;
 	}
 
-	
 }

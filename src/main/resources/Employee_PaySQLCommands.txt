@@ -1,0 +1,146 @@
+ MySQL  localhost:3306 ssl  SQL > show databases;
+UC2->-----------------------------------------------------------//CREATE Database
+ySQL  localhost:3306 ssl  SQL > CREATE DATABASE payroll_service;
+                          
+Query OK, 1 row affected (1.5154 sec)
+ MySQL  localhost:3306 ssl  SQL > show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| payroll_service    |
+| payslip            |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+
+ MySQL  localhost:3306 ssl  payslip  SQL > use payroll_service
+Default schema set to `payroll_service`.
+
+UC3->---------------------------------------------------------//CREATE TABLE
+
+CREATE TABLE employee_pay(
+id int not null auto_increment,
+name varchar(255) NOT NULL,
+wage Double NOT NULL,
+start DATE NOT NULL,
+primary key (id)
+);
+UC4-> ----------------------------------------------------//Insert data into Employee
+INSERT INTO employee_pay (name,wage,start) VALUES('Laxmi',28000,'2022-10-23');
+INSERT INTO employee_pay (name,wage,start) VALUES('Vishnu',75000,'2022-10-25');
+INSERT INTO employee_pay (name,wage,start) VALUES('Venkatesh',111000,'2022-10-02');
+ MySQL  localhost:3306 ssl  payroll_service  SQL > Select * from employee_pay;
++----+-----------+--------+------------+
+| id | name      | wage   | start      |
++----+-----------+--------+------------+
+|  1 | Laxmi     |  28000 | 2022-10-23 |
+|  2 | Vishnu    |  75000 | 2022-10-25 |
+|  3 | Venkatesh | 111000 | 2022-10-02 |
++----+-----------+--------+------------+
+
+UC5->---------------------------------------------// Select with where clause
+
+SELECT * FROM employee_pay where name="Vishnu";
+ MySQL  localhost:3306 ssl  payroll_service  SQL > SELECT * FROM employee_pay where start BETWEEN  CAST('2022-09-20' AS DATE) AND DATE(NOW());
++----+-----------+--------+------------+
+| id | name      | wage   | start      |
++----+-----------+--------+------------+
+|  3 | Venkatesh | 111000 | 2022-10-02 |
++----+-----------+--------+------------+
+
+UC6->---------------------------------// add column and update null valuesfor above
+
+ALTER TABLE employee_pay add column gender varchar(4) AFTER name;
+UPDATE employee_pay SET gender='F' WHERE id=1;
+UPDATE employee_pay SET gender='M' WHERE id<4;
+ MySQL  localhost:3306 ssl  payroll_service  SQL > Select * from employee_pay;
++----+-----------+--------+--------+------------+
+| id | name      | gender | wage   | start      |
++----+-----------+--------+--------+------------+
+|  1 | Laxmi     | F      |  28000 | 2022-10-23 |
+|  2 | Vishnu    | M      |  75000 | 2022-10-25 |
+|  3 | Venkatesh | M      | 111000 | 2022-10-02 |
++----+-----------+--------+--------+------------+
+
+UC7->--------------------------------------------// SUM,MIN, AVG wage GroupBy Gender
+SQL > SELECT SUM(wage),gender FROM employee_pay GROUP BY gender;
++-----------+--------+
+| SUM(wage) | gender |
++-----------+--------+
+|     28000 | F      |
+|    186000 | M      |
++-----------+--------+
+ payroll_service  SQL > SELECT AVG(wage),gender FROM employee_pay GROUP BY gender;
++-----------+--------+
+| AVG(wage) | gender |
++-----------+--------+
+|     28000 | F      |
+|     93000 | M      |
++-----------+--------+
+ SQL > SELECT MIN(wage) FROM employee_pay ;
++-----------+
+| MIN(wage) |
++-----------+
+|     28000 |
++-----------+
+
+UC8->--------------------------// adding column address , dept, phone_no
+ALTER TABLE employee_pay add column  dept varchar(100) not null AFTER address ;
+ALTER TABLE employee_pay add column  address varchar(100)AFTER phone_no;
+ALTER TABLE employee_pay alter address SET DEFAULT 'NCR';
+
+UC9->-// ADDING column related to TAX
+ALTER TABLE employee_pay RENAME COLUMN wage TO basic_pay ;
+ALTER TABLE employee_pay add column  net_pay Double NOT NULL AFTER basic_pay;
+ALTER TABLE employee_pay add column  tax Double NOT NULL AFTER basic_pay;
+ALTER TABLE employee_pay add column  deductions Double NOT NULL AFTER basic_pay;
+
+ payroll_service  SQL > describe employee_pay;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| name        | varchar(255) | NO   |     | NULL    |                |
+| phone_no    | varchar(15)  | YES  |     | NULL    |                |
+| address     | varchar(100) | YES  |     | NCR     |                |
+| dept        | varchar(100) | NO   |     | NULL    |                |
+| gender      | varchar(4)   | YES  |     | NULL    |                |
+| basic_pay   | double       | NO   |     | NULL    |                |
+| deductions  | double       | NO   |     | NULL    |                |
+| taxable_pay | double       | NO   |     | NULL    |                |
+| tax         | double       | NO   |     | NULL    |                |
+| net_pay     | double       | NO   |     | NULL    |                |
+| start       | date         | NO   |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+
+UC10->
+INSERT INTO employee_pay (name,phone_no,address,dept,gender,basic_pay,deductions,taxable_pay,tax,net_pay,start, city,country)
+ VALUES('Terissa',8908303007,'LUCKNOW','SALES','F',77000,2000,3000,500,41000,'2022-10-02','LKO','INDIA');
+INSERT INTO employee_pay (name,phone_no,address,dept,gender,basic_pay,deductions,taxable_pay,tax,net_pay,start, city,country)
+ VALUES('Terissa',8908303007,'LUCKNOW','MARKETING','F',77000,2000,3000,500,41000,'2022-10-02','LKO','INDIA');
+
+payroll_service  SQL > describe employee_pay;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    |auto_increment,c|
+| name        | varchar(255) | NO   |     | NULL    |   multivalued  |
+| phone_no    | varchar(15)  | YES  |     | NULL    |  multivalued   |
+| address     | varchar(100) | YES  |     | NCR     |   composite    |
+| dept        | varchar(100) | NO   |     | NULL    |  single value  |
+| gender      | varchar(4)   | YES  |     | NULL    |   single value |
+| basic_pay   | double       | NO   |     | NULL    |                |
+| deductions  | double       | NO   |     | NULL    |                |
+| taxable_pay | double       | NO   |     | NULL    |                |
+| tax         | double       | NO   |     | NULL    |                |
+| net_pay     | double       | NO   |     | NULL    |     derived    |
+| start       | date         | NO   |     | NULL    |                |
+| city        | varchar(12)  | YES  |     | NULL    |                |
+| country     | varchar(12)  | YES  |     | NULL    |  single valued |
++-------------+--------------+------+-----+---------+----------------+ 
+
+                   
