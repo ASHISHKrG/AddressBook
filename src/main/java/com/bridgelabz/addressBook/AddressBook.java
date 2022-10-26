@@ -14,16 +14,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AddressBook {
 
 	static Map<String, Contact> multipleAddBook;
-	static Map<String, Contact> newcontacts;
-	private static String city;
-	static String state;
+
+	Map<String, Contact> addressBookSystem;
 
 	// creating contact for addressBook
 	public Contact contactDetails() {
 		Contact contact = new Contact();
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter the FirstName");
-		contact.setFirstName(sc.nextLine());
+		contact.setFirstName(sc.nextLine().toLowerCase());
 
 		System.out.println("Enter the LastName");
 		contact.setLastName(sc.nextLine());
@@ -45,123 +44,165 @@ public class AddressBook {
 
 	// for creating multiple addressbook and adding contact
 	Map<String, Contact> addMultipleAddressBook() {
+
 		multipleAddBook = new HashMap<String, Contact>();
 		for (int i = 1; i < 2; i++) {
-			System.out.println("Please Confirm if you want to add multiple Address Book ,Enter Y/N ");
+			System.out.println("Please Confirm if you want to add  Address Book ,Enter Y/N ");
 			Scanner sc = new Scanner(System.in);
 
-			char choice = sc.next().charAt(0);
-			if (choice == 'Y') {
+			char choice = sc.next().toLowerCase().charAt(0);
+			if (choice == 'y') {
 
-				System.out.println("Enter the name of AddressBook");
+				System.out.println("Enter the Name/Type of AddressBook");
 
 				String addBookName = sc.next().toLowerCase();
 
-				AddressBook addAddrBook = new AddressBook();
-				System.out.println(addBookName);
-				newcontacts = addAddrBook.createAddressBook(addBookName);
+				AddressBook addBookObj = new AddressBook();
 
-				multipleAddBook.putAll(newcontacts);
-				// System.out.println(multipleAddBook);
+				System.out.println("Enter the No of contacts you want to create");
+				int noOfContact = sc.nextInt();
 
-				i = 0;
-			} else
-				System.out.println("Created AddressBook" + multipleAddBook);
+				for (int j = 1; j <= noOfContact; j++) {
 
+					Contact contact = addBookObj.contactDetails();
+					// UC-> Check for duplicate contact as key
+					boolean result = multipleAddBook.entrySet().stream()
+							.anyMatch(contactMap -> contactMap.getValue().getFirstName().contains(
+									contact.getFirstName().toLowerCase()) && contactMap.getKey().contains(addBookName));
+					if (result == true) {
+						System.out.println("Contact already exists");
+
+					} else {
+
+						DbConnection insertTODb = new DbConnection();
+						insertTODb.insertContact(contact, addBookName);
+
+						multipleAddBook.put((contact.getFirstName().toLowerCase() + "." + addBookName.toLowerCase()),
+								contact);
+						System.out.println("Contact added in Address Book");
+					}
+				}
+				i = 0; // if not enter Y IN LINE 54
+				multipleAddBook.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
+			}
 		}
 		return multipleAddBook;
 	}
 
-	public Map<String, Contact> createAddressBook(String addressBookName) {
-		newcontacts = new HashMap<String, Contact>();
-
+	void addContactInAddressBook() {
+		multipleAddBook = new HashMap<String, Contact>();
+		System.out.println("Enter the Name/Type of AddressBook");
 		Scanner sc = new Scanner(System.in);
+		String addBookName = sc.next().toLowerCase();
 
-		System.out.println("Enter the No of contacts you want to create");
-		int noOfContact = sc.nextInt();
+		AddressBook addBookObj = new AddressBook();
+		Contact contact = addBookObj.contactDetails();
+		// Check for duplicate contact as key
+		boolean result = multipleAddBook.entrySet().stream().anyMatch(
+				contactMap -> contactMap.getValue().getFirstName().contains(contact.getFirstName().toLowerCase())); // &&
+																													// contactMap.getKey().contains(addBookName));
+		if (result == true) {
+			System.out.println("Contact already exists");
 
-		for (int i = 1; i <= noOfContact; i++) {
-			AddressBook AddContact = new AddressBook();
-			Contact contact = AddContact.contactDetails();
-			// Check for duplicate contact as key
-			boolean result = newcontacts.entrySet().stream().anyMatch(
-					contactMap -> contactMap.getValue().getFirstName().contains(contact.getFirstName().toLowerCase()));
-			if (result == true) {
-				System.out.println("Contact already exists");
+		} else {
 
-			} else
-				newcontacts.put((contact.getFirstName().toLowerCase() + "." + addressBookName.toLowerCase()), contact);
+			DbConnection insertTODb = new DbConnection();
+			insertTODb.insertContact(contact, addBookName);
+
+			multipleAddBook.put((contact.getFirstName().toLowerCase() + "." + addBookName.toLowerCase()), contact);
 		}
-
-		newcontacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
-
-		System.out.println("Please confirm if you want to delete Contact \n Enter Y/N");
-		char delchoice = sc.next().charAt(0);
-		AddressBook addBookobj = new AddressBook();
-		if (delchoice == 'Y')
-			newcontacts.remove(addBookobj.deleteContact());
-		// System.out.println(newcontacts);
-
-		System.out.println("Please confirm if you want to Update Contact Enter Y/N");
-		char updatechoice = sc.next().charAt(0);
-
-		if (updatechoice == 'Y') {
-			// remove old contact and updating new key as first name
-			String updateContact = addBookobj.updateContact();
-			if (newcontacts.containsKey(updateContact.toLowerCase()))
-				newcontacts.remove(updateContact);
-
-			Contact updatecontact = contactDetails();
-			newcontacts.put(updatecontact.getFirstName().toLowerCase(), updatecontact);
-
-		}
-		newcontacts.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
-		System.out.println(newcontacts);
-
-		return newcontacts;
-
 	}
 
-	String deleteContact() {
+	void deleteContact() {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter the First Name of the Contact you want to Delete");
-		String removeContact = sc.nextLine();
-		return removeContact;
+		String contactToRemove = sc.nextLine().toLowerCase();
+		// deleting from database
+		DbConnection dBConn = new DbConnection();
+		dBConn.deleteContact(contactToRemove);
+		multipleAddBook.remove(contactToRemove);
+		multipleAddBook.keySet().removeIf(key -> key.startsWith(contactToRemove));
 
 	}
 
-	String updateContact() {
+	Map<String, Contact> updateContact(Map<String, Contact> addBookSystem) {
 		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the Address Book name for updating Contact");
+		String addBookName = sc.next().toLowerCase();
 		System.out.println("Enter the First Name of the Contact you want to update");
-		String updateContact = sc.nextLine();
-		return updateContact;
+		String updateContactName = sc.next().toLowerCase();
+
+		// remove old contact and updating new key as first name.addressbook
+
+		addBookSystem.keySet().removeIf(key -> key.startsWith(updateContactName + "." + addBookName));
+		Contact contact = contactDetails();
+		DbConnection dbConn = new DbConnection();
+		dbConn.updateContactByFirstName(updateContactName, addBookName, contact);
+		addBookSystem.put(contact.getFirstName().toLowerCase() + "." + addBookName.toLowerCase(), contact);
+		System.out.println("Contact updated in " + addBookName);
+		addBookSystem.forEach((k, v) -> System.out.println("Key = " + k + ", Value = " + v));
+
+		return addBookSystem;
 	}
 
 	public static void main(String[] args) throws IOException, ParseException {
 		System.out.println("Welcome to Address Book");
+		// Map<String, Contact> addressBookSystem = new HashMap<>();
 
-		AddressBook adBook = new AddressBook();
-		Map<String, Contact> addressBookSystem = adBook.addMultipleAddressBook();
-
-		System.out.println("Enter city name for searching contacts by City");
+		SearchPerson Search = new SearchPerson();
 		Scanner sc = new Scanner(System.in);
-		city = sc.nextLine().toLowerCase();
-		SearchPerson Searchedersons = new SearchPerson();
-		Searchedersons.getPersonByCity(addressBookSystem, city);
 
-		System.out.println("Enter State name for searching contacts by State");
-		state = sc.nextLine().toLowerCase();
-		Map<String, Contact> personsWithState = Searchedersons.getPersonByState(addressBookSystem, city, state);
-		System.out.println(personsWithState);
+		AddressBook addBookobj = new AddressBook();
+		addBookobj.addMultipleAddressBook();
 
+		for (int i = 1; i < 2; i++) {
+			System.out.println(
+					"Enter from below options\n 1. Create contact \n 2: Display Contacts\n 3: Edit Contact\n 4: Delete  contact\n "
+							+ "5: Add Multiple contacts\n 6: Search Contacts By City\n 7: Serach Contacts By State\n 8: Close Address Book \n \"Enter your selection : ");
+
+			int option = sc.nextInt(); // get the number as a single line
+			i = 0;
+			switch (option) {
+			/*
+			 * case 1: a.addContact(s); break; case 2: a.displayContact(); break;
+			 */
+			case 1:
+				addBookobj.addContactInAddressBook();
+				break;
+			case 2:
+				DbConnection dBcon = new DbConnection();
+				dBcon.getContactsByType();
+				break;
+			case 3:
+				addBookobj.updateContact(multipleAddBook);
+				break;
+			case 4:
+				addBookobj.deleteContact();
+				break;
+			case 5:
+				addBookobj.addMultipleAddressBook();
+				break;
+			case 6:
+				Search.getPersonByCity(multipleAddBook);
+				break;
+			case 7:
+				Search.getPersonByState(multipleAddBook);
+				break;
+			case 8:
+				i = 2;
+				break;
+			}
+
+		}
 		// UC11 SORTING MAP using person name alphabetically
-		HashMap<String, Contact> temp = addressBookSystem.entrySet().stream()
+		HashMap<String, Contact> addressBookSystem = multipleAddBook.entrySet().stream()
 				.sorted((i1, i2) -> i1.getKey().compareTo(i2.getKey()))
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-		System.out.println("Sorted addesbook by person name" + temp);
+		System.out.println("Sorted addesbook by person name" + addressBookSystem);
 
 		// calling file Writer method
-		FileIOAddBook.readWriteOperation(addressBookSystem);
+		FileIOAddBook.readWriteOperation(multipleAddBook);
+
 	}
 }
