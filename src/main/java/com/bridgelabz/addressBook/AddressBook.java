@@ -43,7 +43,7 @@ public class AddressBook {
 	}
 
 	// for creating multiple addressbook and adding contact
-	Map<String, Contact> addMultipleAddressBook() {
+	Map<String, Contact> addMultipleAddressBook() throws IOException, ParseException {
 
 		multipleAddBook = new HashMap<String, Contact>();
 		for (int i = 1; i < 2; i++) {
@@ -79,6 +79,7 @@ public class AddressBook {
 
 						multipleAddBook.put((contact.getFirstName().toLowerCase() + "." + addBookName.toLowerCase()),
 								contact);
+						FileIOAddBook.readWriteOperation(addBookName, contact);
 						System.out.println("Contact added in Address Book");
 					}
 				}
@@ -157,15 +158,13 @@ public class AddressBook {
 
 		for (int i = 1; i < 2; i++) {
 			System.out.println(
-					"Enter from below options\n 1. Create contact \n 2: Display Contacts\n 3: Edit Contact\n 4: Delete  contact\n "
-							+ "5: Add Multiple contacts\n 6: Search Contacts By City\n 7: Serach Contacts By State\n 8: Close Address Book \n \"Enter your selection : ");
+					"Enter from below options\n 1. Create contact \n 2: Display Contacts by Type \n 3: Edit Contact\n 4: Delete  contact\n "
+							+ "5: Add Multiple contacts\n 6: Search Contacts By City\n 7: Serach Contacts By State\n 8: Read Data from File \n 9: Close Address Book \n \"Enter your selection : ");
 
 			int option = sc.nextInt(); // get the number as a single line
 			i = 0;
 			switch (option) {
-			/*
-			 * case 1: a.addContact(s); break; case 2: a.displayContact(); break;
-			 */
+
 			case 1:
 				addBookobj.addContactInAddressBook();
 				break;
@@ -189,6 +188,9 @@ public class AddressBook {
 				Search.getPersonByState(multipleAddBook);
 				break;
 			case 8:
+				FileIOAddBook.readJSONdata();
+				break;
+			case 9:
 				i = 2;
 				break;
 			}
@@ -200,9 +202,6 @@ public class AddressBook {
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 		System.out.println("Sorted addesbook by person name" + addressBookSystem);
-
-		// calling file Writer method
-		FileIOAddBook.readWriteOperation(multipleAddBook);
 
 	}
 }

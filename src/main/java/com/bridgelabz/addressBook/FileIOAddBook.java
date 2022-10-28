@@ -1,9 +1,15 @@
 package com.bridgelabz.addressBook;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,60 +20,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FileIOAddBook {
 
-	void fileWriterWithFileWriter(String fileURL, String dataToWrite) throws IOException {
-		FileWriter fileWriterObj = new FileWriter(fileURL);
-		//System.out.println("FileIO" + dataToWrite);
-		fileWriterObj.write(dataToWrite);
-
-		fileWriterObj.close();
-
-	}
-
-	public static void readJSONdata(String fileURL) throws IOException, ParseException {
-		// 1 .FileReader Obj
-		FileReader fileReaderObj = new FileReader(fileURL);
-		// 2. creation of parser object
-		JSONParser jsonParserObj = new JSONParser();
-		// 3 . parsing filereader object using json parser and output is object passes
-		// to
-		// objRef of type Object
-		Object objRef = jsonParserObj.parse(fileReaderObj);
-		// 4creating refrence of array of json
-		JSONArray addressBookArrayObj = new JSONArray();
-		addressBookArrayObj.add(objRef);
-
-		try {
-			JSONObject jsonObject = (JSONObject) objRef;
-			String name = (String) jsonObject.get("firstName");
-			String city = (String) jsonObject.get("city");
-			String state = (String) jsonObject.get("state");
-			String lastName = (String) jsonObject.get("lastName");
-			System.out.println("Name: " + name);
-			System.out.println("city: " + city);
-			System.out.println("State:" + state);
-			System.out.println("LastName:" + lastName);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void readWriteOperation(Map<String, Contact> addressBookSystem) throws IOException, ParseException {
-
-		FileIOAddBook fileWriterObj = new FileIOAddBook();
+	public static void readWriteOperation(String type, Contact contact) throws IOException, ParseException {
 
 		String fileURL = "C:\\Users\\aashi\\eclipse-workspace\\addressBook\\src\\main\\resources\\AddressBook.txt";
 		// Converts Hashmap to JSON As ObjectMapper is used, it writes JSON // string
 		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Contact> addressBookContact = new HashMap<>();
+		addressBookContact.put(contact.getFirstName() + "." + type, contact);
 
 		try {
 
-			String AddressBookJson = mapper.writeValueAsString(addressBookSystem);
+			String AddressBookJson = mapper.writeValueAsString(addressBookContact);
 
 			// Print JSON output
 			System.out.println("JSON" + AddressBookJson);
-			fileWriterObj.fileWriterWithFileWriter(fileURL, AddressBookJson);
+
+			FileWriter fileWriterObj = new FileWriter(fileURL, true);
+
+			fileWriterObj.write("\n" + AddressBookJson);
+
+			fileWriterObj.close();
 		}
 
 		// Catching generic input output exceptions
@@ -75,6 +47,28 @@ public class FileIOAddBook {
 			e.printStackTrace();
 		}
 
-		FileIOAddBook.readJSONdata(fileURL);
 	}
+
+	public static void readJSONdata() throws IOException, ParseException {
+
+		// public static void main(String[] args) throws IOException, ParseException {
+		String fileURL = "C:\\Users\\aashi\\eclipse-workspace\\addressBook\\src\\main\\resources\\AddressBook.txt";
+
+		// store in map after reading the data
+		Map<String, String> map = new HashMap<>();
+
+		try (Stream<String> lines = Files.lines(Paths.get(fileURL))) {
+			lines.filter(line -> line.contains(":")).forEach(line -> {
+				String[] keyValuePair = line.split(":", 2); // split the line into 2 parts
+				String key = keyValuePair[0].trim();
+				String value = keyValuePair[1].trim();
+				System.out.println(key + " : " + value);
+				map.put(key, value);
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 }

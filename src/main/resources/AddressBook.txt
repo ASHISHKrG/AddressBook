@@ -1,1 +1,15 @@
-{"romi.adb23":{"state":"UP","address":"","city":"LKO","firstName":"ROMI","lastName":"","email":"","phoneNO":"","zipCode":56789},"zaid.lkhgu":{"state":"UP","address":"","city":"LKO","firstName":"ZAID","lastName":"","email":"","phoneNO":"","zipCode":45678},"vinay.qwr":{"state":"","address":"","city":"KNO","firstName":"vinay","lastName":"ashish","email":"","phoneNO":"","zipCode":45678},"poja.qwer3":{"state":"kp","address":"","city":"","firstName":"poja","lastName":"","email":"56789","phoneNO":"","zipCode":56789},"ashu.xse":{"state":"up","address":"","city":"knp","firstName":"ashu","lastName":"","email":"","phoneNO":"","zipCode":45678}}
+{"gaurav.friends":{"state":"UP","address":"lko","firstName":"gaurav","email":"gaurav@gmail.com","phoneNO":"9876543245","lastName":"gupta","city":"lk","zipCode":234567}}
+
+{"akshay.professional":{"state":"UP","address":"claysquare","firstName":"akshay","lastName":"Gupta","zipCode":234567,"email":"akshay@gmail.com","phoneNO":"987654323","city":"lko"}}
+
+{"adarsh.bussiness":{"state":"Karnataka","address":"complex","lastName":"Kumar","zipCode":234567,"email":"adarsh6754@gmail.com","phoneNO":"987654323","city":"Mysore","firstName":"adarsh"}}
+
+{"romi.family":{"state":"UP","address":"KNP","lastName":"Jaiswal","city":"KP","phoneNO":"987654323","firstName":"romi","zipCode":234567,"email":"romi@gmail.com"}}
+
+{"aquitance":{"state":"UP","address":"lko","lastName":"gupta","firstName":"pihu","email":"pihu56@gmail.com","zipCode":234566,"city":"lk","phoneNO":"987654323"}}
+
+{"family":{"state":"UP","address":"lko","lastName":"gupta","firstName":"vikas","email":"vikas@gmail.com","zipCode":234567,"city":"lko","phoneNO":"987654347"}}
+
+{"family":{"state":"UP","address":"knp","lastName":"praja","firstName":"vinay","email":"vin@gmail.com","zipCode":234567,"city":"lko","phoneNO":"987654568"}}
+
+{"rohit.relative":{"state":"UP","address":"KrishnaLok","firstName":"rohit","lastName":"Pandey","zipCode":234568,"phoneNO":"987654323","email":"rohit34@gmail.com","city":"LKO"}}
